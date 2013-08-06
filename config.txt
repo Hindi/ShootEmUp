@@ -1,0 +1,3 @@
+resolutionX 800
+resolutionY 600
+OVER
