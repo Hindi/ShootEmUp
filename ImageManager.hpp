@@ -17,22 +17,20 @@ public:
     ImageManager();
     ~ImageManager();
 
-	//Renvoie l'image demandée
+	//! Return the image located at "filename" (may use loadImage())
     const sf::Image& getImage(const std::string& filename);
-    //Va chercher le fichier et stocke l'image dans une liste
+	//! Load in memory the image located at "filename"
     void loadImage(const std::string& filename);
-	//Renvoie l'image demandée sous forme de texture
+	//! Return a reference to a texture of the full image located at "filename"
     const sf::Texture& getTexture(const std::string& filename);
-	//Découpe une image pour en extraire une texture
-    const sf::Texture& getTexture(const std::string& filename, sf::Rect<int> rect);
+	//! Return a reference to a texture of the image located at "filename" cut in the rectangle
+    const sf::Texture& getTexture(const std::string& filename, sf::Rect<int> rect);	
 
 private:
-    //Image manager
-    ImageManager& operator =(const ImageManager&);
-
-    //Liste d'images avec le nom
+	//! Images list with their corresponding names
     std::map< std::string, sf::Image > m_images;
-	std::vector<sf::Texture> m_textures;
+	//! Textures list
+	std::vector<sf::Texture> m_textures;			
 };
 
 ImageManager::ImageManager() :
@@ -49,7 +47,7 @@ ImageManager::~ImageManager()
 const sf::Texture& ImageManager::getTexture( const std::string& filename )
 {
 	
-	//On regarde si l'image a été chargée en mémoire
+	//Check if the image is already loaded
 	for( std::map<std::string, sf::Image>::const_iterator it = m_images.begin(); it != m_images.end(); ++it)
 		if( filename == it->first )
 		{
@@ -58,14 +56,14 @@ const sf::Texture& ImageManager::getTexture( const std::string& filename )
 			m_textures.push_back(texture);
 			return m_textures.back();
 		}
-	//Si non on la charge
+	//If not, we load it
 	loadImage(filename);
 	return getTexture(filename);
 }
 
 const sf::Texture& ImageManager::getTexture(const std::string& filename, sf::Rect<int> rect)
 {
-	//On regarde si l'image a été chargée en mémoire
+	//Check if the image is already loaded
 	for( std::map<std::string, sf::Image>::const_iterator it = m_images.begin(); it != m_images.end(); ++it)
 		if( filename == it->first )
 		{
@@ -74,19 +72,19 @@ const sf::Texture& ImageManager::getTexture(const std::string& filename, sf::Rec
 			m_textures.push_back(texture);
 			return m_textures.back();
 		}
-	//Si non on la charge
+	//If not, we load it
 	loadImage(filename);
 	return getTexture(filename, rect);
 }
 
 const sf::Image& ImageManager::getImage( const std::string& filename )
 {
-	//On vérifie que l'image n'existe pas déjà
+	//Check if the image is already loaded
 	for( std::map<std::string, sf::Image>::const_iterator it = m_images.begin(); it != m_images.end(); ++it)
 		if( filename == it->first )
 			return it->second;
 
-	//L'image n'existe pas, on la créé et on la sauvegarde
+	//If not, we load it
 	loadImage(filename);
 	return getImage(filename);
 }
@@ -95,7 +93,7 @@ void ImageManager::loadImage( const std::string& filename )
 {
 	sf::Image image;
 
-	//On cherche l'image pour la garder en mémoire
+	//Loads the file in memory and saves it
 	if( image.loadFromFile(filename) )
 		m_images[filename] = image;
 	else

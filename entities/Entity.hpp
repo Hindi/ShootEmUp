@@ -1,5 +1,6 @@
 #include "../stdafx.h"
 
+
 /*
 	Objet pouvant être affiché à l'écran.
 */

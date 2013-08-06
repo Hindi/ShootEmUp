@@ -19,16 +19,23 @@ public:
 	Game();
 	~Game();
 	
+	//! Starts the game (creating the window included). Used after loadConfig().
 	void StartGame();
+	//! Loads the configuration file "config.txt" and saves the parameters
 	bool loadConfig();
 
 private:
+	//! Used to check the lines in the config file and to save the parameter in the proper variable
 	template<typename T>
 	void checkAndSave(std::string line, std::string reference, T &t);
 
+	//! The image manager of the game
 	ImageManager m_imageManager;
+	//! The path to the config file
 	const std::string m_configFile;
+	//! The resolution of the window
 	sf::Vector2i resolution;
+	//! The configuration parameters list
 	std::vector<std::string> configList;
 };
 
