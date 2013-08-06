@@ -32,6 +32,7 @@ private:
 
     //Liste d'images avec le nom
     std::map< std::string, sf::Image > m_images;
+	std::vector<sf::Texture> m_textures;
 };
 
 ImageManager::ImageManager() :
@@ -47,13 +48,15 @@ ImageManager::~ImageManager()
 
 const sf::Texture& ImageManager::getTexture( const std::string& filename )
 {
-	sf::Texture texture;
+	
 	//On regarde si l'image a été chargée en mémoire
 	for( std::map<std::string, sf::Image>::const_iterator it = m_images.begin(); it != m_images.end(); ++it)
 		if( filename == it->first )
 		{
+			sf::Texture texture;
 			texture.loadFromImage(it->second);
-			return texture;
+			m_textures.push_back(texture);
+			return m_textures.back();
 		}
 	//Si non on la charge
 	loadImage(filename);
@@ -62,13 +65,14 @@ const sf::Texture& ImageManager::getTexture( const std::string& filename )
 
 const sf::Texture& ImageManager::getTexture(const std::string& filename, sf::Rect<int> rect)
 {
-	sf::Texture texture;
 	//On regarde si l'image a été chargée en mémoire
 	for( std::map<std::string, sf::Image>::const_iterator it = m_images.begin(); it != m_images.end(); ++it)
 		if( filename == it->first )
 		{
+			sf::Texture texture;
 			texture.loadFromImage(it->second, rect);
-			return texture;
+			m_textures.push_back(texture);
+			return m_textures.back();
 		}
 	//Si non on la charge
 	loadImage(filename);

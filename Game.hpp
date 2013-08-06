@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "ImageManager.hpp"
+
 /*! 
  *  \brief     The game itself
  *  \details   Stores user settings, gaming loops and game steps
@@ -24,6 +26,7 @@ private:
 	template<typename T>
 	void checkAndSave(std::string line, std::string reference, T &t);
 
+	ImageManager m_imageManager;
 	const std::string m_configFile;
 	sf::Vector2i resolution;
 	std::vector<std::string> configList;
@@ -32,7 +35,8 @@ private:
 void tokenize(const std::string& str,  std::vector< std::string>& tokens);
 
 Game::Game():
-	m_configFile("config.txt")
+	m_configFile("config.txt"),
+	m_imageManager()
 {
 
 }
@@ -45,6 +49,9 @@ Game::~Game()
 void Game::StartGame()
 {
 	sf::RenderWindow window(sf::VideoMode(resolution.x, resolution.y), "SmartPong");
+	sf::Sprite sprite;
+	sf::Texture text = m_imageManager.getTexture("images/huk.png", sf::Rect<int>(0,0,10,10));
+	sprite.setTexture(text);
 	while (window.isOpen())
     {
         sf::Event event;
@@ -54,7 +61,7 @@ void Game::StartGame()
                 window.close();
         }
         window.clear();
-
+		window.draw(sprite);
 
         window.display();
 		sf::sleep(sf::Time(sf::milliseconds(10)));
