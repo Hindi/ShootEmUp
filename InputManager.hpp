@@ -51,7 +51,9 @@ void InputManager::update()
 			x =0;
 		if(y < 100 && y > -100)
 			y =0;
-		m_player.setVelocity(sf::Vector2f(x,y));
+		m_player.setAcceleration(sf::Vector2f(x,y));
+		if(x == 0 && y == 0)
+			m_player.decelerate();
 	}
 	else
 	{
