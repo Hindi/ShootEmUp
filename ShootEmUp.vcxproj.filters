@@ -17,6 +17,15 @@
   <ItemGroup>
     <None Include="ReadMe.txt" />
     <None Include="config.txt" />
+    <None Include="images\ball.png">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="images\border template.png">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="images\huk.png">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -38,6 +47,15 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="entities\Movable.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="entities\EntityManager.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManager.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

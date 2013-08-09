@@ -1,3 +1,4 @@
+#pragma once
 #include "../stdafx.h"
 
 #include "Movable.hpp"
@@ -16,14 +17,19 @@
 class Player: public Movable
 {
 public:
-	Player(sf::Texture& texture);
+	Player(sf::Sprite sprite);
 	~Player();
 private:
 
 };
 
-Player::Player(sf::Texture& texture):
-	Movable(texture)
+Player::Player(sf::Sprite sprite):
+	Movable(sprite)
+{
+
+}
+
+Player::~Player()
 {
 
 }

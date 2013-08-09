@@ -1,3 +1,4 @@
+#pragma once
 #include "../stdafx.h"
 
 /*! 
@@ -14,7 +15,7 @@
 class Entity
 {
 public:
-	Entity(sf::Texture texture);
+	Entity(sf::Sprite sprite);
 	~Entity();
 
 	void draw(sf::RenderWindow &window);
@@ -22,14 +23,13 @@ public:
 	sf::Vector2f getPosition();
 
 protected:
-	sf::Texture& m_texture;
 	sf::Sprite m_sprite;
 };
 
-Entity::Entity(sf::Texture texture):
-	m_texture(texture)
+Entity::Entity(sf::Sprite sprite):
+	m_sprite(sprite)
 {
-	m_sprite.setTexture(m_texture);
+
 }
 
 Entity::~Entity()

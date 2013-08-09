@@ -1,6 +1,10 @@
 #include "stdafx.h"
 
 #include "ImageManager.hpp"
+#include "CollisionManager.hpp"
+#include "InputManager.hpp"
+#include "entities\EntityManager.hpp"
+#include "entities\Player.hpp"
 
 /*! 
  *  \brief     The game itself
@@ -56,19 +60,28 @@ Game::~Game()
 void Game::StartGame()
 {
 	sf::RenderWindow window(sf::VideoMode(resolution.x, resolution.y), "SmartPong");
-	sf::Sprite sprite;
-	sf::Texture text = m_imageManager.getTexture("images/huk.png", sf::Rect<int>(0,0,10,10));
-	sprite.setTexture(text);
+    sf::Event event;
+	
+	sf::Sprite playerSprite(m_imageManager.getTexture("images/ball.png"));
+	Player player(playerSprite);
+	EntityManager entityManager(m_imageManager, window, player);
+	CollisionManager collisionManager(entityManager, resolution);
+	InputManager inputManager(entityManager, window, event);
+
+	entityManager.createBorder(sf::Rect<int>(0,0,resolution.x,10));
+	entityManager.createBorder(sf::Rect<int>(0,resolution.y-10,resolution.x,10));
+	entityManager.createBorder(sf::Rect<int>(0,0,10,resolution.y));
+	entityManager.createBorder(sf::Rect<int>(resolution.x-10,0,10,resolution.y));
+
 	while (window.isOpen())
     {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
         window.clear();
-		window.draw(sprite);
+
+		inputManager.update();
+		entityManager.update();
+		collisionManager.update();
+
+		entityManager.draw();
 
         window.display();
 		sf::sleep(sf::Time(sf::milliseconds(10)));

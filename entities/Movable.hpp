@@ -1,3 +1,4 @@
+#pragma once
 #include "../stdafx.h"
 
 #include "Entity.hpp"
@@ -16,25 +17,43 @@
 class Movable: public Entity
 {
 public:
-	Movable(sf::Texture& texture);
+	Movable(sf::Sprite sprite);
 	~Movable();
-	void move();
-
-	sf::Vector2f m_velocity;
+	void move(float elapsedTime);
+	void setVelocity(sf::Vector2f vel);
 
 protected:
 	int m_mass;
-
+	sf::Vector2f m_velocity;
+	int m_speed;
 };
 
-Movable::Movable(sf::Texture& texture):
-	Entity(texture),
-		m_velocity(0,0)
+Movable::Movable(sf::Sprite sprite):
+	Entity(sprite),
+	m_velocity(0,0),
+	m_speed(500)
 {
 
 }
 
-void Movable::move()
+Movable::~Movable()
 {
-	m_sprite.move(m_velocity);
+}
+
+void Movable::move(float elapsedTime)
+{
+	m_sprite.move(m_velocity*elapsedTime);
+}
+
+void Movable::setVelocity(sf::Vector2f vel)
+{
+	if(vel.x > m_speed)
+		vel.x = m_speed;
+	if(vel.y > m_speed)
+		vel.y = m_speed;
+	if(vel.x < -m_speed)
+		vel.x = -m_speed;
+	if(vel.y < -m_speed)
+		vel.y = -m_speed;
+	m_velocity = vel;
 }

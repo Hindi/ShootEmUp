@@ -79,14 +79,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="config.txt" />
+    <None Include="images\ball.png" />
+    <None Include="images\border template.png" />
+    <None Include="images\huk.png" />
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CollisionManager.hpp" />
     <ClInclude Include="entities\Entity.hpp" />
+    <ClInclude Include="entities\EntityManager.hpp" />
     <ClInclude Include="entities\Movable.hpp" />
     <ClInclude Include="entities\Player.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="ImageManager.hpp" />
+    <ClInclude Include="InputManager.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
