@@ -17,14 +17,14 @@
 class Player: public Movable
 {
 public:
-	Player(sf::Sprite sprite);
+	Player(sf::Texture& texture);
 	~Player();
 private:
 
 };
 
-Player::Player(sf::Sprite sprite):
-	Movable(sprite)
+Player::Player(sf::Texture& texture):
+	Movable(texture)
 {
 
 }

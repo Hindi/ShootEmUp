@@ -62,8 +62,7 @@ void Game::StartGame()
 	sf::RenderWindow window(sf::VideoMode(resolution.x, resolution.y), "SmartPong");
     sf::Event event;
 	
-	sf::Sprite playerSprite(m_imageManager.getTexture("images/ball.png"));
-	Player player(playerSprite);
+	Player player(m_imageManager.getTexture("images/ball.png"));
 	EntityManager entityManager(m_imageManager, window, player);
 	CollisionManager collisionManager(entityManager, resolution);
 	InputManager inputManager(entityManager, window, event);
@@ -78,8 +77,8 @@ void Game::StartGame()
         window.clear();
 
 		inputManager.update();
-		entityManager.update();
 		collisionManager.update();
+		entityManager.update();
 
 		entityManager.draw();
 

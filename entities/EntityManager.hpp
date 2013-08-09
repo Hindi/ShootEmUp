@@ -21,17 +21,27 @@ public:
 	EntityManager(ImageManager &imageManager, sf::RenderWindow &window, Player &player);
 	~EntityManager();
 
+	//! Create a border that'll occupy the rectange in parameter
 	void createBorder(sf::Rect<int> rectangle);
+	//! Draw all the entities on screen
 	void draw();
+	//! Update all the entities
 	void update();
+	//! Return m_entities
 	std::vector< std::shared_ptr<Entity> > getEntities();
+	//! Return a reference to the player
 	Player& getPlayer();
 
 private:
+	//! The ImageManager
 	ImageManager &m_imageManager;
+	//! The RenderWindow
 	sf::RenderWindow& m_window;
+	//! Where all the entities are stored
 	std::vector< std::shared_ptr<Entity> > m_entities;
+	//! The player
 	Player& m_player;
+	//! This clock is used to keep the movement speed from changing when framrate changes
 	sf::Clock m_clock;
 };
 
@@ -51,8 +61,7 @@ EntityManager::~EntityManager()
 void EntityManager::createBorder(sf::Rect<int> rectangle)
 {
 	sf::Rect<int> textRect(0, 0, rectangle.width, rectangle.height);
-	sf::Sprite entSprite(m_imageManager.getTexture("images/border template.png", textRect));
-	std::shared_ptr<Entity> ent( new Entity(entSprite));
+	std::shared_ptr<Entity> ent( new Entity(m_imageManager.getTexture("images/border template.png", textRect)));
 	ent->setPosition(sf::Vector2f(rectangle.left, rectangle.top));
 	m_entities.push_back(ent);
 }
