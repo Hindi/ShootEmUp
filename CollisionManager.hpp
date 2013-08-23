@@ -3,6 +3,8 @@
 #include "entities\EntityManager.hpp"
 #include "entities\Player.hpp"
 #include "entities\Entity.hpp"
+#include "entities\Projectile.hpp"
+#include "entities\ProjectileManager.hpp"
 
 /*! 
  *  \brief     Manages collisions between entities
@@ -15,7 +17,7 @@
 class CollisionManager
 {
 public:
-	CollisionManager(EntityManager& entMan, sf::Vector2i resolution);
+	CollisionManager(EntityManager& entMan, ProjectileManager& ProjectileManager, sf::Vector2i resolution);
 	~CollisionManager();
 	//! Use the other methods to check all the collisions
 	void update();
@@ -29,6 +31,7 @@ private:
 	void borderCollisions();
 	//! A reference to the EntityManager
 	EntityManager& m_entityManager;
+	ProjectileManager& m_projectileManager;
 	//! The resolution of the screen
 	sf::Vector2i m_resolution;
 	//! The player
@@ -36,10 +39,11 @@ private:
 
 };
 
-CollisionManager::CollisionManager(EntityManager& entMan, sf::Vector2i resolution):
+CollisionManager::CollisionManager(EntityManager& entMan, ProjectileManager& projectileManager, sf::Vector2i resolution):
 			m_entityManager(entMan),
 			m_resolution(resolution),
-			m_player(m_entityManager.getPlayer())
+			m_player(m_entityManager.getPlayer()),
+			m_projectileManager(projectileManager)
 {
 
 }
@@ -76,4 +80,19 @@ void CollisionManager::borderCollisions()
 		m_player.setAcceleration(sf::Vector2f(0,-50));
 	if(playerPosition.y < delta/2)
 		m_player.setAcceleration(sf::Vector2f(0,50));
+
+	std::vector< std::shared_ptr<Projectile> >& projectiles = m_projectileManager.getProjectiles();
+	std::vector< std::shared_ptr<Projectile> >::iterator lit(projectiles.begin());
+	int deltaProj(50);
+	for(; lit != projectiles.end();)
+	{
+		sf::Vector2f position((*lit)->getPosition());
+		if(position.x > m_resolution.x + deltaProj || position.x < -deltaProj 
+			|| position.y > m_resolution.y +deltaProj || position.y < -deltaProj)
+		{
+		lit = projectiles.erase(lit);
+		}
+		else
+			lit++;
+	}
 }

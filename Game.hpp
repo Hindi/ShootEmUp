@@ -5,6 +5,7 @@
 #include "InputManager.hpp"
 #include "entities\EntityManager.hpp"
 #include "entities\Player.hpp"
+#include "entities\ProjectileManager.hpp"
 
 /*! 
  *  \brief     The game itself
@@ -33,8 +34,6 @@ private:
 	template<typename T>
 	void checkAndSave(std::string line, std::string reference, T &t);
 
-	//! The image manager of the game
-	ImageManager m_imageManager;
 	//! The path to the config file
 	const std::string m_configFile;
 	//! The resolution of the window
@@ -46,8 +45,7 @@ private:
 void tokenize(const std::string& str,  std::vector< std::string>& tokens);
 
 Game::Game():
-	m_configFile("config.txt"),
-	m_imageManager()
+	m_configFile("config.txt")
 {
 
 }
@@ -59,12 +57,15 @@ Game::~Game()
 
 void Game::StartGame()
 {
-	sf::RenderWindow window(sf::VideoMode(resolution.x, resolution.y), "SmartPong");
+	sf::RenderWindow window(sf::VideoMode(resolution.x, resolution.y), "ShootEmUp");
+	ImageManager imageManager;
     sf::Event event;
-	
-	Player player(m_imageManager.getTexture("images/ball.png"));
-	EntityManager entityManager(m_imageManager, window, player);
-	CollisionManager collisionManager(entityManager, resolution);
+	ProjectileManager ProjManager(imageManager, window);
+	sf::Texture text;
+	text.loadFromImage(imageManager.getImage("images/ball.png"));
+	Player player(text, ProjManager);
+	EntityManager entityManager(imageManager, window, player);
+	CollisionManager collisionManager(entityManager, ProjManager, resolution);
 	InputManager inputManager(entityManager, window, event);
 
 	entityManager.createBorder(sf::Rect<int>(0,0,resolution.x,10));
@@ -79,8 +80,10 @@ void Game::StartGame()
 		inputManager.update();
 		collisionManager.update();
 		entityManager.update();
+		ProjManager.update();
 
 		entityManager.draw();
+		ProjManager.draw();
 
         window.display();
 		sf::sleep(sf::Time(sf::milliseconds(10)));

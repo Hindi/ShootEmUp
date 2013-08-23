@@ -76,5 +76,6 @@ const sf::Image& ImageManager::getImage( const std::string& filename )
 	}
 	else
 		std::cout << "Image '" << filename <<"' was not found. It is filled with an empty image";
+
 	return image;
 }

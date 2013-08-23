@@ -48,9 +48,9 @@ void InputManager::update()
 		m_window.close();
 
 	sf::Joystick::update();
+	int acceleration(15);
 	if (sf::Joystick::isConnected(0))
 	{
-		int acceleration(15);
 		float x = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
 		float y = sf::Joystick::getAxisPosition(0, sf::Joystick::Y);
 		if(x < 100 && x > -100)
@@ -68,18 +68,38 @@ void InputManager::update()
 		m_player.setAcceleration(sf::Vector2f(x,y));
 		if(x == 0 && y == 0)
 			m_player.decelerate();
+		if(sf::Joystick::isButtonPressed(0,7))//tir en R2
+		{
+			sf::Vector2i dir(100,0);
+			dir.x = sf::Joystick::getAxisPosition(0, sf::Joystick::Z);
+			dir.y = sf::Joystick::getAxisPosition(0, sf::Joystick::R);
+			dir.x = dir.x + m_player.getPosition().x;
+			dir.y = dir.y + m_player.getPosition().y;
+			m_player.fireLaser(dir);
+		}
+
 	}
 	else
 	{
-		int up(0), down(0), left(0), right(0);
+		int x(0), y(0);
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-			left = -100;
+			x = -acceleration;
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-			right = 100;
+			x = acceleration;
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-			up = -100;
+			y = -acceleration;
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-			down = 100;
-		m_player.setVelocity(sf::Vector2f(left + right,up + down));
+			y = acceleration;
+		m_player.setAcceleration(sf::Vector2f(x,y));
+		if(x == 0 && y == 0)
+			m_player.decelerate();
+		
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+		{
+			sf::Vector2i mousePos;
+			mousePos.x = sf::Mouse::getPosition().x - m_window.getPosition().x;
+			mousePos.y = sf::Mouse::getPosition().y - m_window.getPosition().y;
+			m_player.fireLaser(mousePos);
+		}
 	}
 }

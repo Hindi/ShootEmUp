@@ -61,7 +61,9 @@ EntityManager::~EntityManager()
 void EntityManager::createBorder(sf::Rect<int> rectangle)
 {
 	sf::Rect<int> textRect(0, 0, rectangle.width, rectangle.height);
-	std::shared_ptr<Entity> ent( new Entity(m_imageManager.getTexture("images/border template.png", textRect)));
+	sf::Texture text;
+	text.loadFromImage(m_imageManager.getImage("images/border template.png"), textRect);
+	std::shared_ptr<Entity> ent( new Entity(text));
 	ent->setPosition(sf::Vector2f(rectangle.left, rectangle.top));
 	m_entities.push_back(ent);
 }

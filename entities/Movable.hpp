@@ -38,11 +38,11 @@ protected:
 	//! Current acceleration
 	sf::Vector2f m_acceleration;
 	//! Max speed
-	const int m_maxSpeed;
+	int m_maxSpeed;
 	//! Max acceleration
-	const int m_maxAcceleration;
+	int m_maxAcceleration;
 	//! acceleration used in decelerate()
-	const int m_deceleration;
+	int m_deceleration;
 };
 
 Movable::Movable(sf::Texture& texture):

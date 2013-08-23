@@ -90,6 +90,8 @@
     <ClInclude Include="entities\EntityManager.hpp" />
     <ClInclude Include="entities\Movable.hpp" />
     <ClInclude Include="entities\Player.hpp" />
+    <ClInclude Include="entities\Projectile.hpp" />
+    <ClInclude Include="entities\ProjectileManager.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="ImageManager.hpp" />
     <ClInclude Include="InputManager.hpp" />
