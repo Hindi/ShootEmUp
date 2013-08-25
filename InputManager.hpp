@@ -68,15 +68,18 @@ void InputManager::update()
 		m_player.setAcceleration(sf::Vector2f(x,y));
 		if(x == 0 && y == 0)
 			m_player.decelerate();
-		if(sf::Joystick::isButtonPressed(0,7))//tir en R2
+		//Update the focus direction if the player moves the pad
+		sf::Vector2f focus(sf::Joystick::getAxisPosition(0, sf::Joystick::Z),sf::Joystick::getAxisPosition(0, sf::Joystick::R));
+		if(focus.y > 10 || focus.y < -10 || focus.x > 10 || focus.x < -10)
 		{
-			sf::Vector2i dir(100,0);
-			dir.x = sf::Joystick::getAxisPosition(0, sf::Joystick::Z);
-			dir.y = sf::Joystick::getAxisPosition(0, sf::Joystick::R);
-			dir.x = dir.x + m_player.getPosition().x;
-			dir.y = dir.y + m_player.getPosition().y;
-			m_player.fireLaser(dir);
+			sf::Vector2f dir(0,0);
+			dir.x = focus.x + m_player.getPosition().x;
+			dir.y = focus.y + m_player.getPosition().y;
+			m_player.updateFocusDirection(dir);
 		}
+
+		if(sf::Joystick::isButtonPressed(0,7))//tir en R2
+			m_player.fireLaser();
 
 	}
 	else
@@ -93,13 +96,13 @@ void InputManager::update()
 		m_player.setAcceleration(sf::Vector2f(x,y));
 		if(x == 0 && y == 0)
 			m_player.decelerate();
-		
+		//Update the focus direction
+		sf::Vector2f mousePos;
+		mousePos.x = sf::Mouse::getPosition().x - m_window.getPosition().x;
+		mousePos.y = sf::Mouse::getPosition().y - m_window.getPosition().y;
+		m_player.updateFocusDirection(mousePos);
+
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-		{
-			sf::Vector2i mousePos;
-			mousePos.x = sf::Mouse::getPosition().x - m_window.getPosition().x;
-			mousePos.y = sf::Mouse::getPosition().y - m_window.getPosition().y;
-			m_player.fireLaser(mousePos);
-		}
+			m_player.fireLaser();
 	}
 }

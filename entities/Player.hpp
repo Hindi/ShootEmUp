@@ -20,10 +20,13 @@ class Player: public Movable
 public:
 	Player(sf::Texture& texture, ProjectileManager& projManager);
 	~Player();
-	void fireLaser(sf::Vector2i mousePos);
+	void fireLaser();
+	void updateFocusDirection(sf::Vector2f mousePosition);
+
 private:
 	ProjectileManager& m_projectileManager;
 	int m_fireRate;
+	sf::Vector2f m_focusDirection;
 	sf::Clock m_fireRateClock;
 };
 
@@ -33,9 +36,10 @@ Player::Player(sf::Texture& texture, ProjectileManager& projManager):
 		m_fireRate(50)
 {
 	m_maxSpeed = 150;
-	m_maxAcceleration = 10;
+	m_maxAcceleration = 5;
 	m_deceleration = 4;
 
+	updateFocusDirection(sf::Vector2f(100,0));
 }
 
 Player::~Player()
@@ -43,23 +47,27 @@ Player::~Player()
 
 }
 
+void Player::updateFocusDirection(sf::Vector2f mousePosition)
+{
+	sf::Vector2f direction;
+	sf::Vector2f playerPos = m_sprite.getPosition();
+	direction.x = (mousePosition.x - playerPos.x);
+	direction.y = (mousePosition.y - playerPos.y);
+	int norm = sqrt(direction.x*direction.x + direction.y*direction.y);
+        if(norm==0)
+            norm=1;
+	m_focusDirection.x = direction.x/norm;
+	m_focusDirection.y = direction.y/norm;
+}
 
-void Player::fireLaser(sf::Vector2i mousePos)
+void Player::fireLaser()
 {
 	if(m_fireRateClock.getElapsedTime().asMilliseconds() > m_fireRate)
 	{
-		//Caculate the direction
-		sf::Vector2f direction;
 		sf::Vector2f playerPos = m_sprite.getPosition();
-		direction.x = (mousePos.x - playerPos.x);
-		direction.y = (mousePos.y - playerPos.y);
-		int norm = sqrt(direction.x*direction.x + direction.y*direction.y);
-            if(norm==0)
-                norm=1;
-		direction.x = direction.x/norm;
-		direction.y = direction.y/norm;
+		
 		//Create the projectile
-		m_projectileManager.createProjectile(playerPos,direction);
+		m_projectileManager.createProjectile(playerPos,m_focusDirection);
 		m_fireRateClock.restart();
 	}
 }
