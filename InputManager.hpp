@@ -79,7 +79,7 @@ void InputManager::update()
 		}
 
 		if(sf::Joystick::isButtonPressed(0,7))//tir en R2
-			m_player.fireLaser();
+			m_player.fire();
 
 	}
 	else
@@ -102,7 +102,7 @@ void InputManager::update()
 		mousePos.y = sf::Mouse::getPosition().y - m_window.getPosition().y;
 		m_player.updateFocusDirection(mousePos);
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-			m_player.fireLaser();
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			m_player.fire();
 	}
 }
