@@ -3,6 +3,7 @@
 #include "entities\EntityManager.hpp"
 #include "entities\Player.hpp"
 #include "entities\Entity.hpp"
+#include "entities\Ennemy.hpp"
 #include "entities\Projectile.hpp"
 #include "entities\ProjectileManager.hpp"
 
@@ -29,6 +30,8 @@ private:
 	int dotProduct(sf::Vector2f vect1, sf::Vector2f vect2);
 	//! Check the player/border collisions
 	void borderCollisions();
+	//!Check the projectile/ennemy collisions
+	void projectileCollisions();
 	//! A reference to the EntityManager
 	EntityManager& m_entityManager;
 	ProjectileManager& m_projectileManager;
@@ -56,6 +59,7 @@ CollisionManager::~CollisionManager()
 void CollisionManager::update()
 {
 	borderCollisions();
+	projectileCollisions();
 }
 
 int CollisionManager::dotProduct(Entity& ent1, Entity& ent2)
@@ -84,15 +88,35 @@ void CollisionManager::borderCollisions()
 	std::vector< std::shared_ptr<Projectile> >& projectiles = m_projectileManager.getProjectiles();
 	std::vector< std::shared_ptr<Projectile> >::iterator lit(projectiles.begin());
 	int deltaProj(50);
-	for(; lit != projectiles.end();)
+	for(; lit != projectiles.end();lit++)
 	{
 		sf::Vector2f position((*lit)->getPosition());
 		if(position.x > m_resolution.x + deltaProj || position.x < -deltaProj 
 			|| position.y > m_resolution.y +deltaProj || position.y < -deltaProj)
+			(*lit)->dead = true;
+	}
+}
+
+void CollisionManager::projectileCollisions()
+{
+	std::vector< std::shared_ptr<Projectile> >& projectiles = m_projectileManager.getProjectiles();
+	std::vector< std::shared_ptr<Ennemy> > enemies = m_entityManager.getEnemies();
+
+	std::vector< std::shared_ptr<Projectile> >::iterator lit(projectiles.begin());
+	std::vector< std::shared_ptr<Ennemy> >::iterator enemyIT(enemies.begin());
+
+	for(; lit != projectiles.end();lit++)
+	{
+		sf::Rect<float> projectileBox((*lit)->getBoundingBox());
+		for(; enemyIT != enemies.end(); enemyIT++)
 		{
-		lit = projectiles.erase(lit);
+			sf::Rect<float> enemyBox((*enemyIT)->getBoundingBox());
+			if(projectileBox.left > enemyBox.left && projectileBox.left < enemyBox.left + enemyBox.width &&
+				projectileBox.top > enemyBox.top && projectileBox.top < enemyBox.top + enemyBox.height)
+			{
+				(*enemyIT)->takeDamage((*lit)->getDamage());
+				(*lit)->dead = true;
+			}
 		}
-		else
-			lit++;
 	}
 }

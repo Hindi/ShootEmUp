@@ -57,9 +57,16 @@ std::vector< std::shared_ptr<Projectile> >& ProjectileManager::getProjectiles()
 
 void ProjectileManager::update()
 {
+	std::vector< std::shared_ptr<Projectile> >::iterator lit(m_projectiles.begin());
 	float elapsedTime = m_clock.getElapsedTime().asSeconds();
-	for(int p(0); p < m_projectiles.size(); ++p)
-		m_projectiles[p]->move(elapsedTime);
+	for(; lit != m_projectiles.end();)
+		if((*lit)->dead)
+			lit = m_projectiles.erase(lit);
+		else
+		{
+			(*lit)->move(elapsedTime);
+			lit++;
+		}
 	m_clock.restart();
 }
 

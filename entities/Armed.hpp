@@ -2,6 +2,7 @@
 #include "../stdafx.h"
 
 #include "Movable.hpp"
+#include "Killable.hpp"
 #include "ProjectileManager.hpp"
 
 /*! 
@@ -15,7 +16,7 @@
  *  \copyright GNU Public License.
  */
 
-class Armed: public Movable
+class Armed: public Killable
 {
 public:
 	Armed(sf::Texture& texture, ProjectileManager& projManager);
@@ -31,7 +32,7 @@ protected:
 };
 
 Armed::Armed(sf::Texture& texture, ProjectileManager& projManager):
-	Movable(texture),
+	Killable(texture),
 		m_projectileManager(projManager),
 		m_fireRate(0)
 {
@@ -47,8 +48,11 @@ void Armed::updateFocusDirection(sf::Vector2f mousePosition)
 {
 	sf::Vector2f direction;
 	sf::Vector2f playerPos = m_sprite.getPosition();
+	playerPos.x += m_sprite.getLocalBounds().width/2;
+	playerPos.y += m_sprite.getLocalBounds().height/2;
+
 	direction.x = (mousePosition.x - playerPos.x);
-	direction.y = (mousePosition.y - playerPos.y);
+	direction.y = (mousePosition.y -22 - playerPos.y);
 	int norm = sqrt(direction.x*direction.x + direction.y*direction.y);
         if(norm==0)
             norm=1;

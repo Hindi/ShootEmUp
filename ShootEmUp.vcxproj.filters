@@ -26,6 +26,12 @@
     <None Include="images\huk.png">
       <Filter>Fichiers de ressources</Filter>
     </None>
+    <None Include="images\projectile.png">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="images\ennemy.png">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -68,6 +74,9 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="entities\Armed.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="entities\Killable.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

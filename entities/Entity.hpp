@@ -24,6 +24,8 @@ public:
 	void setPosition(sf::Vector2f position);
 	//! Return the absolute position of the entity
 	sf::Vector2f getPosition();
+	//! Return the bounding box
+	sf::Rect<float> getBoundingBox();
 
 protected:
 	//! The sprite of the entity
@@ -53,4 +55,12 @@ void Entity::setPosition(sf::Vector2f position)
 sf::Vector2f Entity::getPosition()
 {
 	return m_sprite.getPosition();
+}
+
+sf::Rect<float> Entity::getBoundingBox()
+{
+	sf::Rect<float> bounds = m_sprite.getLocalBounds();
+	bounds.left += this->getPosition().x;
+	bounds.top += this->getPosition().y;
+	return bounds;
 }

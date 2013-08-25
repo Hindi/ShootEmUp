@@ -81,7 +81,9 @@
     <None Include="config.txt" />
     <None Include="images\ball.png" />
     <None Include="images\border template.png" />
+    <None Include="images\ennemy.png" />
     <None Include="images\huk.png" />
+    <None Include="images\projectile.png" />
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +92,7 @@
     <ClInclude Include="entities\Ennemy.hpp" />
     <ClInclude Include="entities\Entity.hpp" />
     <ClInclude Include="entities\EntityManager.hpp" />
+    <ClInclude Include="entities\Killable.hpp" />
     <ClInclude Include="entities\Movable.hpp" />
     <ClInclude Include="entities\Player.hpp" />
     <ClInclude Include="entities\Projectile.hpp" />

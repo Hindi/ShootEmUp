@@ -68,10 +68,7 @@ void Game::StartGame()
 	CollisionManager collisionManager(entityManager, ProjManager, resolution);
 	InputManager inputManager(entityManager, window, event);
 
-	entityManager.createBorder(sf::Rect<int>(0,0,resolution.x,10));
-	entityManager.createBorder(sf::Rect<int>(0,resolution.y-10,resolution.x,10));
-	entityManager.createBorder(sf::Rect<int>(0,0,10,resolution.y));
-	entityManager.createBorder(sf::Rect<int>(resolution.x-10,0,10,resolution.y));
+	entityManager.createEnnemy(sf::Vector2f(300,300));
 
 	while (window.isOpen())
     {
