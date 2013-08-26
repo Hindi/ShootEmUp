@@ -4,6 +4,7 @@
 #include "CollisionManager.hpp"
 #include "InputManager.hpp"
 #include "entities\EntityManager.hpp"
+#include "entities\Entity.hpp"
 #include "entities\Player.hpp"
 #include "entities\ProjectileManager.hpp"
 
@@ -69,6 +70,15 @@ void Game::StartGame()
 	InputManager inputManager(entityManager, window, event);
 
 	entityManager.createEnnemy(sf::Vector2f(300,300));
+	entityManager.createEnnemy(sf::Vector2f(500,200));
+	entityManager.createEnnemy(sf::Vector2f(350,300));
+	entityManager.createEnnemy(sf::Vector2f(550,200));
+	entityManager.createEnnemy(sf::Vector2f(600,500));
+	entityManager.createEnnemy(sf::Vector2f(100,400));
+
+	std::vector< std::shared_ptr<Entity> > ents = entityManager.canCollide(sf::Rect<float> (50,50,50,50));
+	for(int e(0); e < ents.size(); ++e)
+		std::cout << ents[e]->getPosition().x << " " << ents[e]->getPosition().y << std::endl;
 
 	while (window.isOpen())
     {

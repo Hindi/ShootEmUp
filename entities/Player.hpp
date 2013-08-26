@@ -28,7 +28,7 @@ private:
 Player::Player(sf::Texture& texture, ProjectileManager& projManager):
 	Armed(texture, projManager)
 {
-	m_fireRate = 50;
+	m_fireRate = 200;
 	m_maxSpeed = 150;
 	m_maxAcceleration = 5;
 	m_deceleration = 4;

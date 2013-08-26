@@ -104,13 +104,13 @@ void CollisionManager::projectileCollisions()
 
 	std::vector< std::shared_ptr<Projectile> >::iterator lit(projectiles.begin());
 	std::vector< std::shared_ptr<Ennemy> >::iterator enemyIT(enemies.begin());
-
-	for(; lit != projectiles.end();lit++)
-	{
-		sf::Rect<float> projectileBox((*lit)->getBoundingBox());
+	
 		for(; enemyIT != enemies.end(); enemyIT++)
 		{
 			sf::Rect<float> enemyBox((*enemyIT)->getBoundingBox());
+	for(; lit != projectiles.end();lit++)
+	{
+		sf::Rect<float> projectileBox((*lit)->getBoundingBox());
 			if(projectileBox.left > enemyBox.left && projectileBox.left < enemyBox.left + enemyBox.width &&
 				projectileBox.top > enemyBox.top && projectileBox.top < enemyBox.top + enemyBox.height)
 			{

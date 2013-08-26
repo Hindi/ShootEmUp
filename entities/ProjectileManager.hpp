@@ -73,7 +73,6 @@ void ProjectileManager::update()
 
 void ProjectileManager::createProjectile(sf::Vector2f position, sf::Vector2f direction)
 {
-	std::cout << m_projectiles.size() << std::endl;
 	std::shared_ptr<Projectile> proj(new Projectile(m_projectileTexture, position, direction));
 	m_projectiles.push_back(proj);
 }

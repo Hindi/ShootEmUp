@@ -3,6 +3,7 @@
 #include "Entity.hpp"
 #include "Player.hpp"
 #include "Ennemy.hpp"
+#include "Quadtree.hpp"
 #include "../ImageManager.hpp"
 
 /*! 
@@ -36,6 +37,8 @@ public:
 	std::vector< std::shared_ptr<Ennemy> > getEnemies();
 	//! Return a reference to the player
 	Player& getPlayer();
+	
+	std::vector< std::shared_ptr<Entity> > canCollide(sf::Rect<float> rect);
 
 private:
 	//! The ImageManager
@@ -50,14 +53,18 @@ private:
 	//! This clock is used to keep the movement speed from changing when framrate changes
 	sf::Clock m_clock;
 
+	Quadtree m_quadtree;
+
 	sf::Texture m_ennemyTexture;
 };
 
 EntityManager::EntityManager(ImageManager &imageManager, sf::RenderWindow &window, Player &player):
 			m_imageManager(imageManager),
 			m_window(window),
-			m_player(player)
+			m_player(player),
+			m_quadtree(0, sf::Rect<int>(0, 0, m_window.getSize().x, m_window.getSize().y))
 {
+	m_quadtree.clear();
 	m_ennemyTexture.loadFromImage(m_imageManager.getImage("images/ennemy.png"));
 }
 
@@ -81,6 +88,7 @@ void EntityManager::createEnnemy(sf::Vector2f position)
 	std::shared_ptr<Ennemy> ennemy( new Ennemy(m_ennemyTexture, position));
 	m_entities.push_back(ennemy);
 	m_enemies.push_back(ennemy);
+	m_quadtree.insert(ennemy);
 }
 
 
@@ -126,4 +134,9 @@ void EntityManager::update()
 
 	m_player.move(m_clock.getElapsedTime().asSeconds());
 	m_clock.restart();
+}
+
+std::vector< std::shared_ptr<Entity> > EntityManager::canCollide(sf::Rect<float> rect)
+{
+	return m_quadtree.canCollide(rect);
 }

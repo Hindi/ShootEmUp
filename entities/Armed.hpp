@@ -65,7 +65,9 @@ void Armed::fire()
 	if(m_fireRateClock.getElapsedTime().asMilliseconds() > m_fireRate)
 	{
 		sf::Vector2f playerPos = m_sprite.getPosition();
-		
+		playerPos.x += m_sprite.getLocalBounds().width/3;
+		playerPos.y += m_sprite.getLocalBounds().height/3;
+
 		//Create the projectile
 		m_projectileManager.createProjectile(playerPos,m_focusDirection);
 		m_fireRateClock.restart();
