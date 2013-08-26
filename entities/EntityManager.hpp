@@ -34,11 +34,11 @@ public:
 	//! Return m_entities
 	std::vector< std::shared_ptr<Entity> > getEntities();
 	//! Return m_enemies
-	std::vector< std::shared_ptr<Ennemy> > getEnemies();
+	Quadtree<Ennemy> getEnemies();
 	//! Return a reference to the player
 	Player& getPlayer();
 	
-	std::vector< std::shared_ptr<Entity> > canCollide(sf::Rect<float> rect);
+	std::vector< std::shared_ptr<Ennemy> > canCollide(sf::Rect<float> rect);
 
 private:
 	//! The ImageManager
@@ -47,13 +47,12 @@ private:
 	sf::RenderWindow& m_window;
 	//! Where all the entities are stored
 	std::vector< std::shared_ptr<Entity> > m_entities;
-	std::vector< std::shared_ptr<Ennemy> > m_enemies;
 	//! The player
 	Player& m_player;
 	//! This clock is used to keep the movement speed from changing when framrate changes
 	sf::Clock m_clock;
 
-	Quadtree m_quadtree;
+	Quadtree<Ennemy> m_enemies;
 
 	sf::Texture m_ennemyTexture;
 };
@@ -62,9 +61,9 @@ EntityManager::EntityManager(ImageManager &imageManager, sf::RenderWindow &windo
 			m_imageManager(imageManager),
 			m_window(window),
 			m_player(player),
-			m_quadtree(0, sf::Rect<int>(0, 0, m_window.getSize().x, m_window.getSize().y))
+			m_enemies(0, sf::Rect<int>(0, 0, m_window.getSize().x, m_window.getSize().y))
 {
-	m_quadtree.clear();
+	m_enemies.clear();
 	m_ennemyTexture.loadFromImage(m_imageManager.getImage("images/ennemy.png"));
 }
 
@@ -86,9 +85,7 @@ void EntityManager::createBorder(sf::Rect<int> rectangle)
 void EntityManager::createEnnemy(sf::Vector2f position)
 {
 	std::shared_ptr<Ennemy> ennemy( new Ennemy(m_ennemyTexture, position));
-	m_entities.push_back(ennemy);
-	m_enemies.push_back(ennemy);
-	m_quadtree.insert(ennemy);
+	m_enemies.insert(ennemy);
 }
 
 
@@ -97,6 +94,7 @@ void EntityManager::draw()
 	for(int e(0); e < m_entities.size(); ++e)
 		m_entities[e]->draw(m_window);
 	m_player.draw(m_window);
+	m_enemies.draw(m_window);
 }
 
 std::vector< std::shared_ptr<Entity> > EntityManager::getEntities()
@@ -104,7 +102,7 @@ std::vector< std::shared_ptr<Entity> > EntityManager::getEntities()
 	return m_entities;
 }
 
-std::vector< std::shared_ptr<Ennemy> > EntityManager::getEnemies()
+Quadtree<Ennemy> EntityManager::getEnemies()
 {
 	return m_enemies;
 }
@@ -116,27 +114,13 @@ Player& EntityManager::getPlayer()
 
 void EntityManager::update()
 {
-	std::vector< std::shared_ptr<Ennemy> >::iterator lit(m_enemies.begin());
-	std::vector< std::shared_ptr<Entity> >::iterator litt(m_entities.begin());
-	for(; lit != m_enemies.end();)
-	{
-		if(!(*lit)->isAlive())
-		{
-			lit = m_enemies.erase(lit);
-			litt = m_entities.erase(litt);
-		}
-		else
-		{
-			litt++;
-			lit++;
-		}
-	}
+	m_enemies.update();
 
 	m_player.move(m_clock.getElapsedTime().asSeconds());
 	m_clock.restart();
 }
 
-std::vector< std::shared_ptr<Entity> > EntityManager::canCollide(sf::Rect<float> rect)
+std::vector< std::shared_ptr<Ennemy> > EntityManager::canCollide(sf::Rect<float> rect)
 {
-	return m_quadtree.canCollide(rect);
+	return m_enemies.canCollide(rect);
 }

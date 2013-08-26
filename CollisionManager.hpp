@@ -100,17 +100,19 @@ void CollisionManager::borderCollisions()
 void CollisionManager::projectileCollisions()
 {
 	std::vector< std::shared_ptr<Projectile> >& projectiles = m_projectileManager.getProjectiles();
-	std::vector< std::shared_ptr<Ennemy> > enemies = m_entityManager.getEnemies();
+	std::vector< std::shared_ptr<Ennemy> > enemies;
 
 	std::vector< std::shared_ptr<Projectile> >::iterator lit(projectiles.begin());
-	std::vector< std::shared_ptr<Ennemy> >::iterator enemyIT(enemies.begin());
-	
-		for(; enemyIT != enemies.end(); enemyIT++)
-		{
-			sf::Rect<float> enemyBox((*enemyIT)->getBoundingBox());
+	std::vector< std::shared_ptr<Ennemy> >::iterator enemyIT;
+		
 	for(; lit != projectiles.end();lit++)
 	{
 		sf::Rect<float> projectileBox((*lit)->getBoundingBox());
+		enemies = m_entityManager.canCollide(projectileBox);
+		enemyIT = enemies.begin();
+		for(; enemyIT != enemies.end(); enemyIT++)
+		{
+			sf::Rect<float> enemyBox((*enemyIT)->getBoundingBox());
 			if(projectileBox.left > enemyBox.left && projectileBox.left < enemyBox.left + enemyBox.width &&
 				projectileBox.top > enemyBox.top && projectileBox.top < enemyBox.top + enemyBox.height)
 			{

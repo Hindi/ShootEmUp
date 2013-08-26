@@ -1,18 +1,20 @@
 #pragma once
 
 #include "../stdafx.h"
-#include "Entity.hpp"
-#include "Player.hpp"
 #include "Ennemy.hpp"
+#include "Player.hpp"
 
+template <typename T>
 class Quadtree 
 {
 public:
 	Quadtree(int pLevel, sf::Rect<int> pBounds);
 	void clear();
 	void split();
-	void insert(std::shared_ptr<Entity> ent);
-	std::vector< std::shared_ptr<Entity> > canCollide(sf::Rect<float> pRect);
+	void insert(std::shared_ptr<T> ent);
+	void update();
+	std::vector< std::shared_ptr<T> > canCollide(sf::Rect<float> pRect);
+	void draw(sf::RenderWindow& window);
 
 private:
 	int getIndex(sf::Rect<float> pRect);
@@ -20,12 +22,13 @@ private:
 	int MAX_LEVELS;
  
 	int level;
-	std::vector< std::shared_ptr<Entity> > m_entities;
+	std::vector< std::shared_ptr<T> > m_entities;
 	sf::Rect<int> bounds;
 	std::vector<std::shared_ptr<Quadtree> > m_nodes;
 };
 
-Quadtree::Quadtree(int pLevel, sf::Rect<int> pBounds) 
+template <typename T>
+Quadtree<T>::Quadtree(int pLevel, sf::Rect<int> pBounds) 
 {
 	MAX_LEVELS = 5;
 	MAX_OBJECTS = 5;
@@ -33,7 +36,8 @@ Quadtree::Quadtree(int pLevel, sf::Rect<int> pBounds)
 	bounds = pBounds;
 }
 
-void Quadtree::clear()
+template <typename T>
+void Quadtree<T>::clear()
 {
 	m_entities.clear();
 	std::vector<std::shared_ptr<Quadtree> >::iterator it(m_nodes.begin());
@@ -44,7 +48,8 @@ void Quadtree::clear()
 	}
 }
 
-void Quadtree::split() 
+template <typename T>
+void Quadtree<T>::split() 
 {
    int subWidth = bounds.width / 2;
    int subHeight = bounds.height / 2;
@@ -57,7 +62,8 @@ void Quadtree::split()
    m_nodes.push_back(std::shared_ptr<Quadtree>(new Quadtree(level+1, sf::Rect<int>(x + subWidth, y + subHeight, subWidth, subHeight))));
  }
 
-int Quadtree::getIndex(sf::Rect<float> pRect) 
+template <typename T>
+int Quadtree<T>::getIndex(sf::Rect<float> pRect) 
 {
    int index = -1;
    double verticalMidpoint = bounds.left + (bounds.width / 2);
@@ -90,8 +96,8 @@ int Quadtree::getIndex(sf::Rect<float> pRect)
    return index;
  }
 
-
-void Quadtree::insert(std::shared_ptr<Entity> ent) 
+template <typename T>
+void Quadtree<T>::insert(std::shared_ptr<T> ent) 
 {
 	if (m_nodes.size()>0) 
 	{
@@ -112,7 +118,7 @@ void Quadtree::insert(std::shared_ptr<Entity> ent)
          split(); 
       }
 	
-	 std::vector< std::shared_ptr<Entity> >::iterator it(m_entities.begin());
+	 std::vector< std::shared_ptr<T> >::iterator it(m_entities.begin());
      for(; it != m_entities.end();)
 	 {
 		int index = getIndex((*it)->getBoundingBox());
@@ -127,9 +133,25 @@ void Quadtree::insert(std::shared_ptr<Entity> ent)
    }
  }
 
-std::vector< std::shared_ptr<Entity> > Quadtree::canCollide(sf::Rect<float> pRect) 
+template <typename T>
+void Quadtree<T>::update() 
 {
-	std::vector< std::shared_ptr<Entity> > result;
+	for(int n(0); n < m_nodes.size(); ++n)
+		m_nodes[n]->update();
+	std::vector< std::shared_ptr<T> >::iterator it(m_entities.begin());
+     for(; it != m_entities.end();)
+	 {
+		if (!(*it)->isAlive()) 
+			it = m_entities.erase(it);
+		else
+			it++;
+     }
+}
+
+template <typename T>
+std::vector< std::shared_ptr<T> > Quadtree<T>::canCollide(sf::Rect<float> pRect) 
+{
+	std::vector< std::shared_ptr<T> > result;
 	int index = getIndex(pRect);
 	if (index != -1 && m_nodes.size() > 0) 
 		result = m_nodes[index]->canCollide(pRect);
@@ -139,3 +161,15 @@ std::vector< std::shared_ptr<Entity> > Quadtree::canCollide(sf::Rect<float> pRec
  
 	return result;
  }
+
+template <typename T>
+void Quadtree<T>::draw(sf::RenderWindow& window)
+{
+	std::vector< std::shared_ptr<T> >::iterator it(m_entities.begin());
+	for(int n(0); n < m_nodes.size(); ++n)
+		m_nodes[n]->draw(window);
+    for(; it != m_entities.end();++it)
+	{
+		(*it)->draw(window);
+    }
+}

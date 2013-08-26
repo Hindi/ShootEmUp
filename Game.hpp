@@ -76,7 +76,7 @@ void Game::StartGame()
 	entityManager.createEnnemy(sf::Vector2f(000,000));
 	entityManager.createEnnemy(sf::Vector2f(800,500));
 
-	std::vector< std::shared_ptr<Entity> > ents = entityManager.canCollide(sf::Rect<float> (500,50,500,50));
+	std::vector< std::shared_ptr<Ennemy> > ents = entityManager.canCollide(sf::Rect<float> (500,50,500,50));
 	for(int e(0); e < ents.size(); ++e)
 		std::cout << ents[e]->getPosition().x << " " << ents[e]->getPosition().y << std::endl;
 
