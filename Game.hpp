@@ -69,14 +69,14 @@ void Game::StartGame()
 	CollisionManager collisionManager(entityManager, ProjManager, resolution);
 	InputManager inputManager(entityManager, window, event);
 
-	entityManager.createEnnemy(sf::Vector2f(300,300));
-	entityManager.createEnnemy(sf::Vector2f(500,200));
-	entityManager.createEnnemy(sf::Vector2f(350,300));
-	entityManager.createEnnemy(sf::Vector2f(550,200));
-	entityManager.createEnnemy(sf::Vector2f(600,500));
-	entityManager.createEnnemy(sf::Vector2f(100,400));
+	entityManager.createEnnemy(sf::Vector2f(100,100));
+	entityManager.createEnnemy(sf::Vector2f(800,500));
+	entityManager.createEnnemy(sf::Vector2f(800,00));
+	entityManager.createEnnemy(sf::Vector2f(0,500));
+	entityManager.createEnnemy(sf::Vector2f(000,000));
+	entityManager.createEnnemy(sf::Vector2f(800,500));
 
-	std::vector< std::shared_ptr<Entity> > ents = entityManager.canCollide(sf::Rect<float> (50,50,50,50));
+	std::vector< std::shared_ptr<Entity> > ents = entityManager.canCollide(sf::Rect<float> (500,50,500,50));
 	for(int e(0); e < ents.size(); ++e)
 		std::cout << ents[e]->getPosition().x << " " << ents[e]->getPosition().y << std::endl;
 

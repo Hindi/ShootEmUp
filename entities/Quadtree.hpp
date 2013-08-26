@@ -28,7 +28,7 @@ private:
 Quadtree::Quadtree(int pLevel, sf::Rect<int> pBounds) 
 {
 	MAX_LEVELS = 5;
-	MAX_OBJECTS = 10;
+	MAX_OBJECTS = 5;
 	level = pLevel;
 	bounds = pBounds;
 }
@@ -50,11 +50,11 @@ void Quadtree::split()
    int subHeight = bounds.height / 2;
    int x = bounds.left;
    int y = bounds.top;
-
-   m_nodes[0] = std::shared_ptr<Quadtree>((new Quadtree(level+1, sf::Rect<int>(x + subWidth, y, subWidth, subHeight))));
-   m_nodes[1] = std::shared_ptr<Quadtree>((new Quadtree(level+1, sf::Rect<int>(x, y, subWidth, subHeight))));
-   m_nodes[2] = std::shared_ptr<Quadtree>((new Quadtree(level+1, sf::Rect<int>(x, y + subHeight, subWidth, subHeight))));
-   m_nodes[3] = std::shared_ptr<Quadtree>((new Quadtree(level+1, sf::Rect<int>(x + subWidth, y + subHeight, subWidth, subHeight))));
+   
+   m_nodes.push_back(std::shared_ptr<Quadtree>(new Quadtree(level+1, sf::Rect<int>(x + subWidth, y, subWidth, subHeight))));
+   m_nodes.push_back(std::shared_ptr<Quadtree>(new Quadtree(level+1, sf::Rect<int>(x, y, subWidth, subHeight))));
+   m_nodes.push_back(std::shared_ptr<Quadtree>(new Quadtree(level+1, sf::Rect<int>(x, y + subHeight, subWidth, subHeight))));
+   m_nodes.push_back(std::shared_ptr<Quadtree>(new Quadtree(level+1, sf::Rect<int>(x + subWidth, y + subHeight, subWidth, subHeight))));
  }
 
 int Quadtree::getIndex(sf::Rect<float> pRect) 
@@ -96,7 +96,6 @@ void Quadtree::insert(std::shared_ptr<Entity> ent)
 	if (m_nodes.size()>0) 
 	{
 		int index = getIndex(ent->getBoundingBox());
- 
      if (index != -1) {
        m_nodes[index]->insert(ent);
  
