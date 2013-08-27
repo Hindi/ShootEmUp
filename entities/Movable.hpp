@@ -2,6 +2,7 @@
 #include "../stdafx.h"
 
 #include "Entity.hpp"
+#include "../utility.hpp"
 
 /*! 
  *  \brief     A movable can be moved on the screen
@@ -23,10 +24,12 @@ public:
 	void move(float elapsedTime);
 	//! Directly modify the speed
 	void setVelocity(sf::Vector2f vel);
-	//! Modify the acceleration of the player
+	//! Modify the acceleration of the entity
 	void setAcceleration(sf::Vector2f acceleration);
 	//! Modify the speed (used when inputs aren't triggered)
 	void decelerate();
+	//!Modify the orientation of the sprite
+	void setOrientation(sf::Vector2f direction);
 
 protected:
 	//! Update the velocity vector depending on the m_acceleration
@@ -71,6 +74,11 @@ void Movable::setVelocity(sf::Vector2f vel)
 	m_velocity = vel;
 }
 
+void Movable::setOrientation(sf::Vector2f direction)
+{
+	m_sprite.setRotation(directionToAngle(direction));
+}
+
 void Movable::setAcceleration(sf::Vector2f acceleration)
 {
 	m_acceleration = acceleration;
@@ -105,6 +113,7 @@ void Movable::updateVelocity()
 		m_velocity.x = -m_maxSpeed;
 	if(m_velocity.y < -m_maxSpeed)
 		m_velocity.y = -m_maxSpeed;
+	this->setOrientation(m_velocity);
 }
 
 void Movable::decelerate()
@@ -123,4 +132,5 @@ void Movable::decelerate()
 		m_velocity.x += m_deceleration;
 	if(m_velocity.y < 0)
 		m_velocity.y += m_deceleration;
+	this->setOrientation(m_velocity);
 }

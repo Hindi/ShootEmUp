@@ -63,7 +63,7 @@ void Game::StartGame()
     sf::Event event;
 	ProjectileManager ProjManager(imageManager, window);
 	sf::Texture text;
-	text.loadFromImage(imageManager.getImage("images/ball.png"));
+	text.loadFromImage(imageManager.getImage("images/player.png"));
 	Player player(text, ProjManager);
 	EntityManager entityManager(imageManager, window, player);
 	CollisionManager collisionManager(entityManager, ProjManager, resolution);
@@ -75,10 +75,6 @@ void Game::StartGame()
 	entityManager.createEnnemy(sf::Vector2f(0,500));
 	entityManager.createEnnemy(sf::Vector2f(000,000));
 	entityManager.createEnnemy(sf::Vector2f(800,500));
-
-	std::vector< std::shared_ptr<Ennemy> > ents = entityManager.canCollide(sf::Rect<float> (500,50,500,50));
-	for(int e(0); e < ents.size(); ++e)
-		std::cout << ents[e]->getPosition().x << " " << ents[e]->getPosition().y << std::endl;
 
 	while (window.isOpen())
     {

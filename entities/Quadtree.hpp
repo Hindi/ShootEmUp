@@ -12,7 +12,7 @@ public:
 	void clear();
 	void split();
 	void insert(std::shared_ptr<T> ent);
-	void update();
+	void update(float elapsedTime, sf::Vector2f playerPos);
 	std::vector< std::shared_ptr<T> > canCollide(sf::Rect<float> pRect);
 	void draw(sf::RenderWindow& window);
 
@@ -102,8 +102,8 @@ void Quadtree<T>::insert(std::shared_ptr<T> ent)
 	if (m_nodes.size()>0) 
 	{
 		int index = getIndex(ent->getBoundingBox());
-     if (index != -1) {
-       m_nodes[index]->insert(ent);
+		if (index != -1) {
+		   m_nodes[index]->insert(ent);
  
        return;
      }
@@ -134,17 +134,21 @@ void Quadtree<T>::insert(std::shared_ptr<T> ent)
  }
 
 template <typename T>
-void Quadtree<T>::update() 
+void Quadtree<T>::update(float elapsedTime, sf::Vector2f playerPos) 
 {
 	for(int n(0); n < m_nodes.size(); ++n)
-		m_nodes[n]->update();
+		m_nodes[n]->update(elapsedTime, playerPos);
 	std::vector< std::shared_ptr<T> >::iterator it(m_entities.begin());
      for(; it != m_entities.end();)
 	 {
 		if (!(*it)->isAlive()) 
 			it = m_entities.erase(it);
 		else
+		{
+			(*it)->accelerateToTarget(playerPos);
+			(*it)->move(elapsedTime);
 			it++;
+		}
      }
 }
 

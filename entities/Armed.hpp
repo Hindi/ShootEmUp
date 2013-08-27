@@ -47,12 +47,10 @@ Armed::~Armed()
 void Armed::updateFocusDirection(sf::Vector2f mousePosition)
 {
 	sf::Vector2f direction;
-	sf::Vector2f playerPos = m_sprite.getPosition();
-	playerPos.x += m_sprite.getLocalBounds().width/2;
-	playerPos.y += m_sprite.getLocalBounds().height/2;
+	sf::Vector2f entPos = m_sprite.getPosition();
 
-	direction.x = (mousePosition.x - playerPos.x);
-	direction.y = (mousePosition.y -22 - playerPos.y);
+	direction.x = (mousePosition.x - entPos.x);
+	direction.y = (mousePosition.y - entPos.y);
 	int norm = sqrt(direction.x*direction.x + direction.y*direction.y);
         if(norm==0)
             norm=1;
@@ -64,12 +62,10 @@ void Armed::fire()
 {
 	if(m_fireRateClock.getElapsedTime().asMilliseconds() > m_fireRate)
 	{
-		sf::Vector2f playerPos = m_sprite.getPosition();
-		playerPos.x += m_sprite.getLocalBounds().width/3;
-		playerPos.y += m_sprite.getLocalBounds().height/3;
+		sf::Vector2f entPos = m_sprite.getPosition();
 
 		//Create the projectile
-		m_projectileManager.createProjectile(playerPos,m_focusDirection);
+		m_projectileManager.createProjectile(entPos,m_focusDirection);
 		m_fireRateClock.restart();
 	}
 }

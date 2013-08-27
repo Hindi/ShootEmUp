@@ -33,6 +33,7 @@ Projectile::Projectile(sf::Texture& texture, sf::Vector2f position, sf::Vector2f
 			dead(false)
 {
 	m_sprite.setPosition(position);
+	m_sprite.setOrigin(0,0);
 	m_velocity.x = direction.x*m_speed;
 	m_velocity.y = direction.y*m_speed;
 }

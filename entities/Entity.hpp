@@ -19,14 +19,14 @@ public:
 	~Entity();
 
 	//! Draw the entity on screen
-	void draw(sf::RenderWindow &window);
+	virtual void draw(sf::RenderWindow &window);
 	//! Set the absolute position of the entity
 	void setPosition(sf::Vector2f position);
 	//! Return the absolute position of the entity
 	sf::Vector2f getPosition();
 	//! Return the bounding box
 	sf::Rect<float> getBoundingBox();
-
+	sf::Sprite& getSprite();
 protected:
 	//! The sprite of the entity
 	sf::Sprite m_sprite;
@@ -35,6 +35,7 @@ protected:
 Entity::Entity(sf::Texture& texture)
 {
 	m_sprite.setTexture(texture);
+	m_sprite.setOrigin(m_sprite.getLocalBounds().width/2, m_sprite.getLocalBounds().height/2);
 }
 
 Entity::~Entity()
@@ -59,8 +60,10 @@ sf::Vector2f Entity::getPosition()
 
 sf::Rect<float> Entity::getBoundingBox()
 {
-	sf::Rect<float> bounds = m_sprite.getLocalBounds();
-	bounds.left += this->getPosition().x;
-	bounds.top += this->getPosition().y;
-	return bounds;
+	return m_sprite.getGlobalBounds();
+}
+
+sf::Sprite& Entity::getSprite()
+{
+	return m_sprite;
 }

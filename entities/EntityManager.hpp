@@ -34,7 +34,7 @@ public:
 	//! Return m_entities
 	std::vector< std::shared_ptr<Entity> > getEntities();
 	//! Return m_enemies
-	Quadtree<Ennemy> getEnemies();
+	std::vector< std::shared_ptr<Ennemy> >  getEnemies();
 	//! Return a reference to the player
 	Player& getPlayer();
 	
@@ -47,12 +47,11 @@ private:
 	sf::RenderWindow& m_window;
 	//! Where all the entities are stored
 	std::vector< std::shared_ptr<Entity> > m_entities;
+	std::vector< std::shared_ptr<Ennemy> > m_enemies;
 	//! The player
 	Player& m_player;
 	//! This clock is used to keep the movement speed from changing when framrate changes
 	sf::Clock m_clock;
-
-	Quadtree<Ennemy> m_enemies;
 
 	sf::Texture m_ennemyTexture;
 };
@@ -60,8 +59,7 @@ private:
 EntityManager::EntityManager(ImageManager &imageManager, sf::RenderWindow &window, Player &player):
 			m_imageManager(imageManager),
 			m_window(window),
-			m_player(player),
-			m_enemies(0, sf::Rect<int>(0, 0, m_window.getSize().x, m_window.getSize().y))
+			m_player(player)
 {
 	m_enemies.clear();
 	m_ennemyTexture.loadFromImage(m_imageManager.getImage("images/ennemy.png"));
@@ -85,7 +83,7 @@ void EntityManager::createBorder(sf::Rect<int> rectangle)
 void EntityManager::createEnnemy(sf::Vector2f position)
 {
 	std::shared_ptr<Ennemy> ennemy( new Ennemy(m_ennemyTexture, position));
-	m_enemies.insert(ennemy);
+	m_enemies.push_back(ennemy);
 }
 
 
@@ -93,8 +91,9 @@ void EntityManager::draw()
 {
 	for(int e(0); e < m_entities.size(); ++e)
 		m_entities[e]->draw(m_window);
+	for(int e(0); e < m_enemies.size(); ++e)
+		m_enemies[e]->draw(m_window);
 	m_player.draw(m_window);
-	m_enemies.draw(m_window);
 }
 
 std::vector< std::shared_ptr<Entity> > EntityManager::getEntities()
@@ -102,7 +101,7 @@ std::vector< std::shared_ptr<Entity> > EntityManager::getEntities()
 	return m_entities;
 }
 
-Quadtree<Ennemy> EntityManager::getEnemies()
+std::vector< std::shared_ptr<Ennemy> > EntityManager::getEnemies()
 {
 	return m_enemies;
 }
@@ -114,13 +113,24 @@ Player& EntityManager::getPlayer()
 
 void EntityManager::update()
 {
-	m_enemies.update();
+	std::vector< std::shared_ptr<Ennemy> >::iterator it(m_enemies.begin());
+	for(; it != m_enemies.end();)
+	{
+		if((*it)->isAlive())
+		{
+			(*it)->accelerateToTarget(m_player.getPosition());
+			(*it)->move(m_clock.getElapsedTime().asSeconds());
+			it++;
+		}
+		else
+			it = m_enemies.erase(it);
+	}
 
 	m_player.move(m_clock.getElapsedTime().asSeconds());
 	m_clock.restart();
 }
-
+/*
 std::vector< std::shared_ptr<Ennemy> > EntityManager::canCollide(sf::Rect<float> rect)
 {
 	return m_enemies.canCollide(rect);
-}
+}*/
